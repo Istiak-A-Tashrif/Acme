@@ -1,0 +1,84 @@
+services:
+  # Backend service
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: legal-doc-backend
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+    networks:
+      - legal-doc-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    profiles:
+      - prod
+
+  # Frontend service
+  frontend:
+    build:
+      context: ./website
+      dockerfile: Dockerfile
+    container_name: legal-doc-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - legal-doc-network
+    environment:
+      - VITE_API_URL=http://backend:3001
+    profiles:
+      - prod
+
+  # Development services (optional)
+  backend-dev:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    container_name: legal-doc-backend-dev
+    ports:
+      - "3002:3002"
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - PORT=3002
+    networks:
+      - legal-doc-network
+    profiles:
+      - dev
+
+  frontend-dev:
+    build:
+      context: ./website
+      dockerfile: Dockerfile.dev
+    container_name: legal-doc-frontend-dev
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./website:/app
+      - /app/node_modules
+    depends_on:
+      - backend-dev
+    networks:
+      - legal-doc-network
+    environment:
+      - VITE_API_URL=http://localhost:3002
+    profiles:
+      - dev
+
+networks:
+  legal-doc-network:
+    driver: bridge
+
+volumes:
+  backend_node_modules:
+  frontend_node_modules:

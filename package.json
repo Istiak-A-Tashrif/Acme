@@ -1,0 +1,29 @@
+{
+  "name": "legal-doc-search-portal",
+  "version": "1.0.0",
+  "description": "Legal document search portal monorepo with NestJS backend and React frontend",
+  "scripts": {
+    "start": "concurrently \"npm run backend:start\" \"npm run frontend:start\"",
+    "dev": "concurrently \"npm run backend:dev\" \"npm run frontend:dev\"",
+    "backend:start": "cd backend && npm run start",
+    "backend:dev": "cd backend && npm run start:dev",
+    "frontend:start": "cd website && npm run preview",
+    "frontend:dev": "cd website && npm run dev",
+    "backend:build": "cd backend && npm run build",
+    "frontend:build": "cd website && npm run build",
+    "build": "npm run backend:build && npm run frontend:build",
+    "backend:install": "cd backend && npm install",
+    "frontend:install": "cd website && npm install",
+    "install:all": "npm run backend:install && npm run frontend:install",
+    "docker:build": "docker-compose --profile prod build",
+    "docker:up": "docker-compose --profile prod up -d",
+    "docker:down": "docker-compose down",
+    "docker:dev": "docker-compose --profile dev up -d --build",
+    "docker:dev:down": "docker-compose --profile dev down"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0"
+  },
+  "author": "Acme AI Ltd",
+  "license": "MIT"
+}

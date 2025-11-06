@@ -1,0 +1,18 @@
+# Development Dockerfile for NestJS with hot reload
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Copy package.json and package-lock.json
+COPY package*.json ./
+
+# Install all dependencies (including dev dependencies)
+RUN npm install
+
+# Don't copy source code - it will be mounted as volume
+
+# Expose port
+EXPOSE 3002
+
+# Start in development mode with hot reload
+CMD ["npm", "run", "start:dev"]
